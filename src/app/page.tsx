@@ -1,12 +1,15 @@
 import Image from "next/image";
-import { Footer, Header, Main } from "./components/home/home";
+import { HomeHeader } from "./components/home/header";
+import { HomeMain } from "./components/home/main";
+import { HomeFooter } from "./components/home/footer";
+
 
 export default function Home() {
   return (
     <div>
-      <Header />
-      <Main />
-      <Footer />
+      <HomeHeader />
+      <HomeMain />
+      <HomeFooter />
     </div>
   );
 }
