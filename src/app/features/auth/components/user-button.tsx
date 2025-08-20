@@ -14,6 +14,7 @@ import { Loader, LogOut, Settings } from "lucide-react";
 
 import { useRouter } from "next/navigation";
 import { useCurrentUser } from "../api/use-current-user";
+import { CreatePhoneModel } from "@/app/components/home/create-phone-model";
 
 export const UserButton = () => {
   const { signOut } = useAuthActions();
@@ -85,6 +86,7 @@ export const UserButton = () => {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      <CreatePhoneModel phone={phone}/>
     </div>
   );
 };
