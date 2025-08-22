@@ -5,6 +5,7 @@ import { TriangleAlert } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import PhoneInput from 'react-phone-number-input';
 import { api } from "../../../../convex/_generated/api";
+import { Input } from "@/components/ui/input";
 
 
 
@@ -64,7 +65,6 @@ export const CreatePhoneModel = ({ phone }: CreatePhoneModelProps) => {
                         value={phoneNumber}
                         onChange={(value) => setPhoneNumber(value || "")}
                         placeholder="Enter Phone number"
-                    // className="border-1 p-2 rounded-sm"
                     />
                     <div className="flex justify-end">
                         <Button disabled={false}>

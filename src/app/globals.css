@@ -1,5 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import 'react-phone-number-input/style.css';
+
 
 @custom-variant dark (&:is(.dark *));
 
@@ -120,3 +122,73 @@
     @apply bg-background text-foreground;
   }
 }
+
+.PhoneInputInput {
+  @apply flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm 
+         transition-colors focus-visible:outline-none focus-visible:ring-1 
+         focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50;
+  color: var(--foreground);
+}
+
+.PhoneInputInput::placeholder {
+  @apply text-muted-foreground;
+}
+
+.PhoneInputInput::selection {
+  background-color: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+}
+
+.PhoneInputInput[aria-invalid="true"] {
+  @apply border-destructive ring-1 ring-destructive/30;
+}
+
+.dark .PhoneInputInput {
+  background-color: var(--input);
+  color: var(--foreground);
+}
+
+.dark .PhoneInputInput::placeholder {
+  color: var(--muted-foreground);
+}
+
+.dark .PhoneInputInput[aria-invalid="true"] {
+  @apply ring-destructive/40;
+}
+
+/* 🌍 Country flag button */
+.PhoneInputCountry {
+  @apply flex items-center justify-center h-9 rounded-md border border-input bg-transparent px-2 
+         shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground 
+         focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring;
+}
+
+/* Hide country name, keep accessibility */
+.PhoneInputCountrySelect {
+  @apply absolute inset-0 opacity-0 cursor-pointer;
+}
+
+/* Dropdown menu options */
+.PhoneInputCountrySelect option {
+  @apply bg-popover text-popover-foreground text-sm py-1 px-2;
+}
+
+/* Selected / focused option */
+.PhoneInputCountrySelect option:checked,
+.PhoneInputCountrySelect option:focus {
+  @apply bg-accent text-accent-foreground;
+}
+
+/* 🌙 Dark mode for dropdown */
+.dark .PhoneInputCountrySelect option {
+  background-color: var(--popover);
+  color: var(--popover-foreground);
+}
+
+.dark .PhoneInputCountrySelect option:checked,
+.dark .PhoneInputCountrySelect option:focus {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+
+

@@ -1,10 +1,12 @@
 import { defineSchema, defineTable } from "convex/server";
 import { authTables } from "@convex-dev/auth/server";
 import { v } from "convex/values";
- 
+
 const schema = defineSchema({
   ...authTables,
-      users: defineTable({
+
+  // users Table
+  users: defineTable({
     name: v.optional(v.string()),
     image: v.optional(v.string()),
     email: v.optional(v.string()),
@@ -12,11 +14,71 @@ const schema = defineSchema({
     phone: v.optional(v.string()),
     phoneVerificationTime: v.optional(v.number()),
     isAnonymous: v.optional(v.boolean()),
-    role: v.optional(
-      v.union(v.literal("user"), v.literal("admin"),)
-    ),
+    role: v.optional(v.union(v.literal("user"), v.literal("admin"))),
   }).index("email", ["email"]),
-    
+
+  // movies Table
+  movies: defineTable({
+    title: v.string(),
+    description: v.optional(v.string()),
+    duration: v.number(), // count it as minutes
+    genre: v.string(),
+    posterUrl: v.optional(v.string()),
+    pricing: v.record(v.string(), v.number()),
+  }),
+
+  // rooms Table
+  rooms: defineTable({
+    name: v.string(),
+  }),
+
+  // seats Table
+  seats: defineTable({
+    roomId: v.id("rooms"),
+    number: v.number(),
+    seatType: v.union(v.literal("normal"), v.literal("VIP")),
+    row: v.string(),
+  }),
+
+  // showTimes
+  showTimes: defineTable({
+    movieId: v.id("movies"),
+    roomId: v.id("rooms"),
+    startTime: v.number(),
+    endTime: v.optional(v.number()),
+  })
+    .index("by_movie", ["movieId"])
+    .index("by_room", ["roomId"]),
+
+  // bookings Table
+  bookings: defineTable({
+    userId: v.id("users"),
+    showTimeId: v.id("showTimes"),
+    totalPrice: v.number(),
+    status: v.union(
+      v.literal("pending"),
+      v.literal("confirmed"),
+      v.literal("expired")
+    ),
+    paymentMethod: v.optional(
+      v.union(
+        v.literal("cash"),
+        v.literal("credit_card"),
+        v.literal("digital_wallet")
+      )
+    ),
+    paymentStatus: v.optional(v.union(v.literal("unpaid"), v.literal("paid"))),
+  }),
+
+  
+  // tickets Table
+  tickets: defineTable({
+    bookingId: v.id("bookings"),
+    seatId: v.id("seats"),
+    pricePaid: v.number(),
+  })
+  .index("by_booking", ["bookingId"])
+  .index("by_seat", ["seatId"]),
 });
- 
+
 export default schema;

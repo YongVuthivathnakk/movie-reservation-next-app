@@ -1,7 +1,10 @@
 import { UserButton } from "@/app/features/auth/components/user-button";
-import React from "react";
+import { NotificationButton } from "@/app/features/ticket/components/notification-button";
+import { TicketButton } from "@/app/features/ticket/components/ticket-button";
+import React   from "react";
 
 export const HomeHeader = () => {
+
   return (
     <>
       <header className="w-full border-b bg-neutral-800">
@@ -12,7 +15,9 @@ export const HomeHeader = () => {
               Movie Seats Booking Platform
             </p>
           </div>
-          <div className="flex items-center">
+          <div className="flex w-[150px] justify-between items-center">
+            <TicketButton />
+            <NotificationButton />
             <UserButton />
           </div>
         </div>
