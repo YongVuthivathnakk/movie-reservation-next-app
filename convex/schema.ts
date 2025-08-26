@@ -21,10 +21,12 @@ const schema = defineSchema({
   movies: defineTable({
     title: v.string(),
     description: v.optional(v.string()),
-    duration: v.number(), // count it as minutes
+    duration: v.number(),
     genre: v.string(),
     posterUrl: v.optional(v.string()),
     pricing: v.record(v.string(), v.number()),
+    releaseDate:  v.optional(v.string()),
+    classification: v.string(),
   }),
 
   // rooms Table
@@ -80,5 +82,4 @@ const schema = defineSchema({
   .index("by_booking", ["bookingId"])
   .index("by_seat", ["seatId"]),
 });
-
 export default schema;

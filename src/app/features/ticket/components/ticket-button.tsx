@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Ticket } from "lucide-react";
+import { Flower2, Ticket } from "lucide-react";
 
 export const TicketButton = () => {
   return (

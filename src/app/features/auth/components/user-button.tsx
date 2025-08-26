@@ -10,9 +10,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuthActions } from "@convex-dev/auth/react";
-import { Loader, LogOut, Settings } from "lucide-react";
+import { HomeIcon, LayoutDashboard, Loader, LogOut, Settings } from "lucide-react";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useCurrentUser } from "../api/use-current-user";
 import { CreatePhoneModel } from "@/app/components/home/create-phone-model";
 
@@ -20,6 +20,7 @@ export const UserButton = () => {
   const { signOut } = useAuthActions();
   const router = useRouter();
   const { userData, isCurrentUserLoading } = useCurrentUser();
+  const pathname = usePathname();
 
   if (isCurrentUserLoading) {
     return <Loader className="size-4 animate-spin text-muted-foreground" />;
@@ -29,7 +30,7 @@ export const UserButton = () => {
     return null;
   }
 
-  const { _id, name, image, phone } = userData;
+  const { _id, name, image, phone, role } = userData;
 
   const avatarFallback = name!.charAt(0).toUpperCase();
 
@@ -37,13 +38,14 @@ export const UserButton = () => {
     router.push(`/user/${_id}`);
   };
 
-  // const handleAdmin = () => {
-  //   router.push(`/admin/dashboard`);
-  // };
 
-  // const handleHome = () => {
-  //   router.push(`/`);
-  // };
+  const handleAdmin = () => {
+    router.push(`/admin/dashboard`);
+  };
+
+  const handleHome = () => {
+    router.push(`/`);
+  };
 
   return (
     <div>
@@ -59,22 +61,19 @@ export const UserButton = () => {
         <DropdownMenuContent align="center" side="right" className="w-60">
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
 
-          {/* {role === "admin" && pathname == "/" && (
+          {role === "admin" && pathname === "/" && (
             <DropdownMenuItem onClick={() => handleAdmin()} className="h-10">
+              <LayoutDashboard />
               Admin Dashboard
             </DropdownMenuItem>
           )}
-          {pathname == "/" && (
-            <DropdownMenuItem onClick={() => signOut()} className="h-10">
-              <LogOut className="size-4 mr-2" />
-              Log out
-            </DropdownMenuItem>
-          )}
+
           {pathname.startsWith("/admin") && (
             <DropdownMenuItem onClick={() => handleHome()} className="h-10">
+              <HomeIcon />
               Home
             </DropdownMenuItem>
-          )} */}
+          )}
 
           <DropdownMenuItem onClick={() => handleProfile()}>
             <Settings className="size-4 mr-2" />
