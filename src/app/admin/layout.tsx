@@ -31,7 +31,7 @@ export default function adminLayout({
       </div>
       {children}
     </main>
-            <Toaster />
+    <Toaster position="top-center" />
     </SidebarProvider>
   );
 }

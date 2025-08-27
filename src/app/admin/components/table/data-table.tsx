@@ -5,7 +5,11 @@ import {
   flexRender,
   getCoreRowModel,
   getPaginationRowModel,
+  ColumnFiltersState,
   useReactTable,
+  getFilteredRowModel,
+  ColumnFilter,
+  VisibilityState,
 } from "@tanstack/react-table";
 
 import {
@@ -16,19 +20,34 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
+import React, { useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
+import { DeleteButton } from "../delete-button";
+import { Id } from "../../../../../convex/_generated/dataModel";
+import { FunctionReference } from "convex/server";
+import { ReactMutation } from "convex/react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  children: React.ReactNode;
+  handleDelete: ReactMutation<FunctionReference<"mutation", "public", { ids: Id<"movies">[]; }, null, string | undefined>>;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  children,
+  handleDelete
 }: DataTableProps<TData, TValue>) {
-  const [rowSelection, setRowSelection] = React.useState({});
+  const [rowSelection, setRowSelection] = React.useState({})
+  const [columnFilters, setColumnFilter] = React.useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
+  const selectRowIds = useMemo(() => Object.keys(rowSelection), [rowSelection]);
+
 
   const table = useReactTable({
     data,
@@ -36,13 +55,88 @@ export function DataTable<TData, TValue>({
     onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    onColumnFiltersChange: setColumnFilter,
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+
     state: {
       rowSelection,
+      columnFilters,
+      columnVisibility,
     },
   });
 
+  useEffect(() => {
+    const columns = table.getAllColumns();
+    if (columns.length > 0) {
+      columns[1].toggleVisibility(false);
+      columns[columns.length - 1].toggleVisibility(false);
+    }
+  }, [table]);
+
+
+  const deleteOnId = async () => {
+    const selectRows = table
+      .getSelectedRowModel()
+      .rows.map((row) => (row.original as any)._id) as Id<"movies">[];
+
+      await handleDelete({ids: selectRows});
+       table.resetRowSelection();
+  }
+
+
+
   return (
     <div>
+      <div className="flex justify-between py-4 w-full">
+        <div className="flex gap-4">
+          <Input
+            placeholder="Filter title..."
+            value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("title")?.setFilterValue(event.target.value)
+            }
+            className="max-w-sm"
+          />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Columns
+                <ChevronDown />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter(
+                  (column) => column.getCanHide()
+                )
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  )
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+        <div className="flex items-center gap-4">
+          {children}
+          {selectRowIds.length > 0 && 
+            (
+              <DeleteButton handleDelete={deleteOnId} />
+            )
+          } 
+        </div>
+      </div>
       <div className="overflow-hidden rounded-md border">
         <Table>
           <TableHeader>
@@ -54,9 +148,9 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}

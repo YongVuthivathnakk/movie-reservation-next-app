@@ -9,14 +9,24 @@ import { AddMovieButton } from "./components/add-movie-button";
 import { sampleData } from "./sample-data";
 import { useAddMovie } from "@/hooks/movies/use-add-movies";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { useMutation } from "convex/react";
+import { api } from "../../../../convex/_generated/api";
 
 
 function MoviesDashboard() {
   const { movieData, isLoading } = useGetMovies();
   const { handleAddMovies } = useAddMovie();
+  const deleteData = useMutation(api.movies.deleteOnId);
 
-  if (isLoading) return <p>Loading Data ...</p>;
-
+if (isLoading) {
+  return (
+    <div className="flex h-full w-full items-center justify-center">
+      <Loader2 size={50} className="animate-spin text-muted-foreground" />
+      <span className="ml-2 text-lg text-muted-foreground">Loading data...</span>
+    </div>
+  );
+}
   const handleGenerateData = async () => {
     try {
       for(const movie of sampleData) {
@@ -29,17 +39,17 @@ function MoviesDashboard() {
     }
   }
 
+
   return (
     <div className="p-6">
       <h1 className="text-xl font-semibold mb-4">Movie Table</h1>
-      <div className="mb-4 flex gap-4 justify-end">
-        <AddMovieButton />
-        <Button onClick={handleGenerateData}>
-          Generate 10 Data
-        </Button>
-      </div>
-      <DataTable columns={columns} data={movieData || []} />
-      
+        <DataTable columns={columns} data={movieData || []} handleDelete={deleteData}>
+          <AddMovieButton />
+          <Button onClick={handleGenerateData}>
+            Generate 10 Data
+          </Button>
+        </DataTable>
+
     </div>
   );
 }

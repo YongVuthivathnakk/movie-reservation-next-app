@@ -35,4 +35,15 @@ export const addMovies = mutation({
 
     return movieId;
   },
-})
+});
+
+// Delete data based on ID
+
+export const deleteOnId = mutation({
+  args: {ids: v.array(v.id("movies")) },
+  handler: async (ctx, args) => {
+    for (const id of args.ids) {
+      await ctx.db.delete(id);
+    }
+  }
+});
