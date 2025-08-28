@@ -16,7 +16,7 @@ export const HomeHeader = () => {
               Movie Seats Booking Platform
             </p>
           </div>
-          <div className="flex w-[180px] justify-between items-center">
+          <div className="flex justify-between gap-7 items-center">
             <TicketButton />
             <NotificationButton />
             <ThemeToggle />

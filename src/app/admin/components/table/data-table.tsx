@@ -23,7 +23,12 @@ import {
 import React, { useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
 import { DeleteButton } from "../delete-button";
 import { Id } from "../../../../../convex/_generated/dataModel";
@@ -34,20 +39,37 @@ interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   children: React.ReactNode;
-  handleDelete: ReactMutation<FunctionReference<"mutation", "public", { ids: Id<"movies">[]; }, null, string | undefined>>;
+  handleDelete: ReactMutation<
+    FunctionReference<
+      "mutation",
+      "public",
+      { ids: Id<"movies">[] },
+      null,
+      string | undefined
+    >
+  >;
+  isDone: boolean;
+  loadMore: (numItems: number) => void;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   children,
-  handleDelete
+  handleDelete,
+  isDone,
+  loadMore,
 }: DataTableProps<TData, TValue>) {
-  const [rowSelection, setRowSelection] = React.useState({})
-  const [columnFilters, setColumnFilter] = React.useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
+  const [rowSelection, setRowSelection] = React.useState({});
+  const [columnFilters, setColumnFilter] = React.useState<ColumnFiltersState>(
+    []
+  );
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
   const selectRowIds = useMemo(() => Object.keys(rowSelection), [rowSelection]);
 
+  const [page, setPage] = React.useState(0);
+  const [to]
 
   const table = useReactTable({
     data,
@@ -74,17 +96,14 @@ export function DataTable<TData, TValue>({
     }
   }, [table]);
 
-
   const deleteOnId = async () => {
     const selectRows = table
       .getSelectedRowModel()
       .rows.map((row) => (row.original as any)._id) as Id<"movies">[];
 
-      await handleDelete({ids: selectRows});
-       table.resetRowSelection();
-  }
-
-
+    await handleDelete({ ids: selectRows });
+    table.resetRowSelection();
+  };
 
   return (
     <div>
@@ -108,9 +127,7 @@ export function DataTable<TData, TValue>({
             <DropdownMenuContent align="end">
               {table
                 .getAllColumns()
-                .filter(
-                  (column) => column.getCanHide()
-                )
+                .filter((column) => column.getCanHide())
                 .map((column) => {
                   return (
                     <DropdownMenuCheckboxItem
@@ -123,23 +140,21 @@ export function DataTable<TData, TValue>({
                     >
                       {column.id}
                     </DropdownMenuCheckboxItem>
-                  )
+                  );
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
         <div className="flex items-center gap-4">
           {children}
-          {selectRowIds.length > 0 && 
-            (
-              <DeleteButton handleDelete={deleteOnId} />
-            )
-          } 
+          {selectRowIds.length > 0 && (
+            <DeleteButton handleDelete={deleteOnId} />
+          )}
         </div>
       </div>
       <div className="overflow-hidden rounded-md border">
-        <Table>
-          <TableHeader>
+        <Table >
+          <TableHeader >
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -148,16 +163,16 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
                   );
                 })}
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody >
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
@@ -196,20 +211,31 @@ export function DataTable<TData, TValue>({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => {
+              if(page > 0) {
+                setPage(page - 1);
+                table.previousPage();
+              }
+            }}
+            disabled={page === 0}
           >
             Previous
           </Button>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={() => {
+              setPage(page + 1);
+              table.nextPage();
+            }}
+            disabled={isDone && !table.getCanNextPage()}
           >
             Next
           </Button>
         </div>
+        <div>Page: {page}</div>
+        <div>{totalPage}</div>
+
       </div>
     </div>
   );

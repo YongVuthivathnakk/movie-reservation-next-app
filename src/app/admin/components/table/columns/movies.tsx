@@ -3,6 +3,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Id } from "../../../../../../convex/_generated/dataModel";
 import { Checkbox } from "@/components/ui/checkbox";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { MoreHorizontal } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export type Movie = {
   _id: Id<"movies">;
@@ -110,4 +114,39 @@ export const columns: ColumnDef<Movie>[] = [
       return new Date(date).toLocaleString();
     },
   },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const movie = row.original;
+
+      const handleCopyId = () => {
+        try {
+           navigator.clipboard.writeText(movie._id);
+           toast.success("Copied ID to clipboard");
+        } catch (err) {
+          console.error("Error copy ID: ", err );
+          toast.error("Fail to copy text")
+        }
+      }
+
+      return (
+                <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={handleCopyId}
+            >
+              Copy payment ID
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )
+    },
+  }
 ];

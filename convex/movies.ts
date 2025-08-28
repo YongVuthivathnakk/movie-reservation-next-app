@@ -3,11 +3,26 @@ import { mutation, query } from "./_generated/server";
 
 
 // Get All Movies
+// export const getMovies = query({
+//   handler: async (ctx) => {
+//     return await ctx.db.query("movies").collect();
+//   }
+// });
+
+// Get All data with pagination
 export const getMovies = query({
-  handler: async (ctx) => {
-    return await ctx.db.query("movies").collect();
+  args: {
+    paginationOpts: v.any(),
+  },
+  handler: async (ctx, args) => {
+
+    return await ctx.db
+      .query("movies")
+      .order("desc")
+      .paginate(args.paginationOpts)
   }
-});
+})
+
 
 // Add Movies
 export const addMovies = mutation({

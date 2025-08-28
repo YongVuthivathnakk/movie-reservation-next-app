@@ -15,7 +15,8 @@ import { api } from "../../../../convex/_generated/api";
 
 
 function MoviesDashboard() {
-  const { movieData, isLoading } = useGetMovies();
+  // const { movieData, isLoading } = useGetMovies();
+  const {movies, isLoading, isDone, loadMore} = useGetMovies(20);
   const { handleAddMovies } = useAddMovie();
   const deleteData = useMutation(api.movies.deleteOnId);
 
@@ -43,7 +44,7 @@ if (isLoading) {
   return (
     <div className="p-6">
       <h1 className="text-xl font-semibold mb-4">Movie Table</h1>
-        <DataTable columns={columns} data={movieData || []} handleDelete={deleteData}>
+        <DataTable columns={columns} data={movies || []} isDone={isDone} loadMore={loadMore} handleDelete={deleteData}>
           <AddMovieButton />
           <Button onClick={handleGenerateData}>
             Generate 10 Data
