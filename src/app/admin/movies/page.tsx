@@ -16,7 +16,7 @@ import { api } from "../../../../convex/_generated/api";
 
 function MoviesDashboard() {
   // const { movieData, isLoading } = useGetMovies();
-  const {movies, isLoading, isDone, loadMore} = useGetMovies(20);
+  const {movies, isLoading, isDone, loadMore} = useGetMovies(10);
   const { handleAddMovies } = useAddMovie();
   const deleteData = useMutation(api.movies.deleteOnId);
 

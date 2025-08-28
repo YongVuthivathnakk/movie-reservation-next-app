@@ -69,7 +69,7 @@ export function DataTable<TData, TValue>({
   const selectRowIds = useMemo(() => Object.keys(rowSelection), [rowSelection]);
 
   const [page, setPage] = React.useState(0);
-  const [to]
+  const [maxPage, setMaxPage] = React.useState(0);
 
   const table = useReactTable({
     data,
@@ -163,9 +163,9 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   );
                 })}
@@ -212,8 +212,8 @@ export function DataTable<TData, TValue>({
             variant="outline"
             size="sm"
             onClick={() => {
-              if(page > 0) {
-                setPage(page - 1);
+              if (page > 1) {
+                setPage((prev) => prev - 1);
                 table.previousPage();
               }
             }}
@@ -225,16 +225,22 @@ export function DataTable<TData, TValue>({
             variant="outline"
             size="sm"
             onClick={() => {
-              setPage(page + 1);
+              if (page >= maxPage) {
+                // load new data before advancing
+                setMaxPage((prev) => prev + 1);
+                loadMore(10);
+                console.log("load")
+              }
+              setPage((prev) => prev + 1);
               table.nextPage();
             }}
-            disabled={isDone && !table.getCanNextPage()}
+            disabled={ !table.getCanNextPage() && isDone }
           >
             Next
           </Button>
         </div>
         <div>Page: {page}</div>
-        <div>{totalPage}</div>
+        <div>Max Page: {maxPage}</div>
 
       </div>
     </div>
