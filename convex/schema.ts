@@ -56,6 +56,8 @@ const schema = defineSchema({
   bookings: defineTable({
     userId: v.id("users"),
     showTimeId: v.id("showTimes"),
+    roomId: v.id("rooms"),
+    seatId: v.array(v.id("seats")),
     totalPrice: v.number(),
     status: v.union(
       v.literal("pending"),
