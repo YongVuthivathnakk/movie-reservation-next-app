@@ -142,7 +142,7 @@ export const columns: ColumnDef<Movie>[] = [
             <DropdownMenuItem
               onClick={handleCopyId}
             >
-              Copy payment ID
+              Copy movie ID
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

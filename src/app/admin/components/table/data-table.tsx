@@ -35,7 +35,7 @@ import { Id } from "../../../../../convex/_generated/dataModel";
 import { FunctionReference } from "convex/server";
 import { ReactMutation } from "convex/react";
 
-interface DataTableProps<TData, TValue, TTable extends "movies" | "rooms"> {
+interface DataTableProps<TData, TValue, TTable extends "movies" | "rooms" | "seats"> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   idType: TTable;
@@ -51,7 +51,7 @@ interface DataTableProps<TData, TValue, TTable extends "movies" | "rooms"> {
   >;
 }
 
-export function DataTable<TData, TValue, TTable extends "movies" | "rooms">({
+export function DataTable<TData, TValue, TTable extends "movies" | "rooms" | "seats">({
   columns,
   data,
   children,
@@ -89,7 +89,7 @@ DataTableProps<TData, TValue, TTable>) {
     const columns = table.getAllColumns();
     if (columns.length > 0) {
       columns[1].toggleVisibility(false);
-      columns[columns.length - 1].toggleVisibility(false);
+      columns[columns.length - 2].toggleVisibility(false);
     }
   }, [table]);
 
@@ -104,6 +104,7 @@ DataTableProps<TData, TValue, TTable>) {
   const filterMap: Record<string, { column: string; placeholder: string }> = {
     movies: { column: "title", placeholder: "Filter title..." },
     rooms: { column: "name", placeholder: "Filter name..." },
+    seats: { column: "roomId", placeholder: "Filter room ID..." },
   };
 
   const config = filterMap[idType];
@@ -120,7 +121,7 @@ DataTableProps<TData, TValue, TTable>) {
                 ""
               }
               onChange={(event) =>
-                table.getColumn("title")?.setFilterValue(event.target.value)
+                table.getColumn(config.column)?.setFilterValue(event.target.value)
               }
               className="max-w-sm"
             />
@@ -203,7 +204,7 @@ DataTableProps<TData, TValue, TTable>) {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  Loading Data ...
+                  No data
                 </TableCell>
               </TableRow>
             )}

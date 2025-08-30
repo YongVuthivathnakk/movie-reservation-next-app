@@ -14,4 +14,5 @@ export const deleteOnId = mutation({
       await ctx.db.delete(id);
     }
   }
-})
+});
+

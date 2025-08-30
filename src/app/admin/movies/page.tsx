@@ -40,7 +40,7 @@ function MoviesDashboard() {
   return (
     <div className="p-6">
       <h1 className="text-xl font-semibold mb-4">Movie Table</h1>
-        <DataTable columns={columns} data={movies || []} handleDelete={deleteData}>
+        <DataTable idType="movies" columns={columns} data={movies || []} handleDelete={deleteData}>
           <AddMovieButton />
           <Button onClick={handleGenerateData}>
             Generate 10 Data

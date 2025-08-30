@@ -20,7 +20,7 @@ export const TicketList = () => {
 
             <div className="relative md:h-auto md:w-[400px]">
                 
-                <Card>
+                {/* <Card>
                     <div className="h-[450px]">
                     </div>
                     <CardHeader>
@@ -33,8 +33,8 @@ export const TicketList = () => {
                     <CardFooter>
                         <p>Card Footer</p>
                     </CardFooter>
-                </Card>
-
+                </Card> */}
+                
             </div>
         </div>
     )

@@ -14,7 +14,7 @@ function UserDashboard() {
 
   return (
     <div className="p-6">
-      <h1 className="text-xl font-semibold mb-4">Movie Table</h1>
+      <h1 className="text-xl font-semibold mb-4">Users Table</h1>
         <UsersDataTable columns={columns} data={users || []}  />
     </div>
   )

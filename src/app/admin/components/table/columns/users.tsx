@@ -110,7 +110,7 @@ export const columns: ColumnDef<User>[] = [
           className={
             row.original.role === "user"
               ? "text-emerald-500 font-semibold"
-              : "text-destructive font-semibold"
+              : "text-yellow-400 font-semibold"
           }
         >
           {row.original.role}
