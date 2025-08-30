@@ -47,13 +47,13 @@ export const CreatePhoneModel = ({ phone }: CreatePhoneModelProps) => {
 
     return (
         <Dialog open={open} onOpenChange={handleClose}>
-            <DialogContent className="bg-neutral-800">
+            <DialogContent className="bg-secondary">
                 <DialogHeader>
                     <DialogTitle>Enter your phone number</DialogTitle>
                 </DialogHeader>
                 {!!error && (
                     <div className='bg-destructive/15 p-3 rounded-md flex items-center gap-x-2 text-sm text-destructive'>
-                        <TriangleAlert className="size-4" />
+                        <TriangleAlert className="size-4" /> 
                         <p>{error}</p>
                     </div>
                 )}

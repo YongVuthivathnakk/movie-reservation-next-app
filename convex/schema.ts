@@ -32,6 +32,7 @@ const schema = defineSchema({
   // rooms Table
   rooms: defineTable({
     name: v.string(),
+    type: v.string(),
   }),
 
   // seats Table

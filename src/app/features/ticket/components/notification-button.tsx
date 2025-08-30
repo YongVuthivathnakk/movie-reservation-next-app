@@ -13,7 +13,7 @@ export const NotificationButton = () => {
   return (
     <Dialog>
       <DialogTrigger className="py-0" asChild>
-          <Bell />
+          <Bell size={20} />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

@@ -3,11 +3,11 @@ import { mutation, query } from "./_generated/server";
 
 
 // Get All Movies
-// export const getMovies = query({
-//   handler: async (ctx) => {
-//     return await ctx.db.query("movies").collect();
-//   }
-// });
+export const getAllMovies = query({
+  handler: async (ctx) => {
+    return await ctx.db.query("movies").collect();
+  }
+});
 
 // Get All data with pagination
 export const getMovies = query({

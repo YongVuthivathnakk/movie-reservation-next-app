@@ -18,6 +18,12 @@ export const current = query({
   }
 })
 
+export const getAllUsers = query({
+  handler: async (ctx) => {
+    return await ctx.db.query("users").collect();
+  }
+})
+
 
 
 // Mutation:
@@ -60,4 +66,5 @@ export const phoneVerificationTime = mutation({
     await ctx.db.patch(userId, {phoneVerificationTime: Date.now()})
   }
 })
+
 

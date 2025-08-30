@@ -29,37 +29,37 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Loader2 } from "lucide-react";
 import { DeleteButton } from "../delete-button";
 import { Id } from "../../../../../convex/_generated/dataModel";
 import { FunctionReference } from "convex/server";
 import { ReactMutation } from "convex/react";
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData, TValue, TTable extends "movies" | "rooms"> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  idType: TTable;
   children: React.ReactNode;
   handleDelete: ReactMutation<
     FunctionReference<
       "mutation",
       "public",
-      { ids: Id<"movies">[] },
+      { ids: Id<TTable>[] },
       null,
       string | undefined
     >
   >;
-  isDone: boolean;
-  loadMore: (numItems: number) => void;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData, TValue, TTable extends "movies" | "rooms">({
   columns,
   data,
   children,
   handleDelete,
-  isDone,
-  loadMore,
-}: DataTableProps<TData, TValue>) {
+  idType,
+}: // isDone,
+// loadMore,
+DataTableProps<TData, TValue, TTable>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnFilters, setColumnFilter] = React.useState<ColumnFiltersState>(
     []
@@ -67,9 +67,6 @@ export function DataTable<TData, TValue>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
   const selectRowIds = useMemo(() => Object.keys(rowSelection), [rowSelection]);
-
-  const [page, setPage] = React.useState(0);
-  const [maxPage, setMaxPage] = React.useState(0);
 
   const table = useReactTable({
     data,
@@ -99,24 +96,35 @@ export function DataTable<TData, TValue>({
   const deleteOnId = async () => {
     const selectRows = table
       .getSelectedRowModel()
-      .rows.map((row) => (row.original as any)._id) as Id<"movies">[];
-
-    await handleDelete({ ids: selectRows });
+      .rows.map((row) => (row.original as any)._id) as Id<typeof idType>[];
+      await handleDelete({ ids: selectRows });
     table.resetRowSelection();
   };
+
+  const filterMap: Record<string, { column: string; placeholder: string }> = {
+    movies: { column: "title", placeholder: "Filter title..." },
+    rooms: { column: "name", placeholder: "Filter name..." },
+  };
+
+  const config = filterMap[idType];
 
   return (
     <div>
       <div className="flex justify-between py-4 w-full">
         <div className="flex gap-4">
-          <Input
-            placeholder="Filter title..."
-            value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("title")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
+          {config ? (
+            <Input
+              placeholder={config.placeholder}
+              value={
+                (table.getColumn(config.column)?.getFilterValue() as string) ??
+                ""
+              }
+              onChange={(event) =>
+                table.getColumn("title")?.setFilterValue(event.target.value)
+              }
+              className="max-w-sm"
+            />
+          ) : null}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
@@ -153,8 +161,8 @@ export function DataTable<TData, TValue>({
         </div>
       </div>
       <div className="overflow-hidden rounded-md border">
-        <Table >
-          <TableHeader >
+        <Table>
+          <TableHeader className="sticky top-0 bg-background shadow-sm">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -163,16 +171,16 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
                     </TableHead>
                   );
                 })}
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody >
+          <TableBody>
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
@@ -195,7 +203,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Loading Data ...
                 </TableCell>
               </TableRow>
             )}
@@ -211,37 +219,20 @@ export function DataTable<TData, TValue>({
           <Button
             variant="outline"
             size="sm"
-            onClick={() => {
-              if (page > 1) {
-                setPage((prev) => prev - 1);
-                table.previousPage();
-              }
-            }}
-            disabled={page === 0}
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
           >
             Previous
           </Button>
           <Button
             variant="outline"
             size="sm"
-            onClick={() => {
-              if (page >= maxPage) {
-                // load new data before advancing
-                setMaxPage((prev) => prev + 1);
-                loadMore(10);
-                console.log("load")
-              }
-              setPage((prev) => prev + 1);
-              table.nextPage();
-            }}
-            disabled={ !table.getCanNextPage() && isDone }
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
           >
             Next
           </Button>
         </div>
-        <div>Page: {page}</div>
-        <div>Max Page: {maxPage}</div>
-
       </div>
     </div>
   );

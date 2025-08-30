@@ -13,7 +13,7 @@ export const TicketButton = () => {
   return (
     <Dialog>
       <DialogTrigger className="py-0" asChild>
-          <Ticket />
+          <Ticket size={20} />
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

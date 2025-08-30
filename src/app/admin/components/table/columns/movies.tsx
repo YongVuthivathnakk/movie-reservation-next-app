@@ -81,7 +81,7 @@ export const columns: ColumnDef<Movie>[] = [
   },
   {
     accessorKey: "posterUrl",
-    header: "Poster URL",
+    header: "Poster_URL",
     cell: ({ row }) => {
       return (
         <div className="max-w-[150px] truncate" title={row.original.posterUrl}>
@@ -110,8 +110,8 @@ export const columns: ColumnDef<Movie>[] = [
     accessorKey: "_creationTime",
     header: "_creationTime",
     cell: ({ row }) => {
-      const date = row.original._creationTime;
-      return new Date(date).toLocaleString();
+      const date = new Date(row.original._creationTime);
+      return date.toLocaleString();
     },
   },
   {
@@ -130,7 +130,7 @@ export const columns: ColumnDef<Movie>[] = [
       }
 
       return (
-                <DropdownMenu>
+        <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>

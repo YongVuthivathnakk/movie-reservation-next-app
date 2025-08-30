@@ -1,91 +1,48 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Textarea } from "@/components/ui/textarea";
-import { useAddMovie } from "@/hooks/movies/use-add-movies";
-import { ChevronDown, ChevronDownIcon } from "lucide-react";
-import React, { useState } from "react";
-import { toast } from "sonner";
-import { Calendar } from "@/components/ui/calendar";
 
-export const AddMovieButton = () => {
-  const { handleAddMovies } = useAddMovie();
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@radix-ui/react-dropdown-menu";
+import { useMutation } from "convex/react";
+import { Calendar } from "lucide-react";
+import { useState } from "react";
+import { api } from "../../../../../convex/_generated/api";
+import { toast } from "sonner";
+
+export const AddRoomButton = () => {
+
   const [open, setOpen] = useState(false);
-  const [popoverOpen, setPopoverOpen] = useState(false);
-  const [date, setDate] = useState<Date | undefined>(undefined);
   const [form, setForm] = useState({
-    title: "",
-    description: "",
-    duration: 0,
-    genre: "",
-    posterUrl: "",
-    standardPricing: 0,
-    vipPricing: 0,
-    classification: "",
+    name: "",
+    type: "",
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value, type } = e.target;
+  const handleAddRooms = useMutation(api.rooms.addRooms);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({
       ...form,
-      [name]: type === "number" ? Number(value) : value,
     });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await handleAddMovies({
-        title: form.title,
-        description: form.description || undefined,
-        duration: form.duration,
-        genre: form.genre,
-        posterUrl: form.posterUrl,
-        pricing: {
-          standard: form.standardPricing,
-          VIP: form.vipPricing,
-        },
-        releaseDate: date ? date.toISOString() : "",
-        classification: form.classification,
-      });
-      toast.success("Movie have been added");
+      handleAddRooms(form);
+      toast.success("Room have been added");
       setOpen(false);
     } catch (err) {
-      console.error("Fail to add movie: ", err);
-      toast.error("Fail to add movie");
+      console.error("Fail to add rooms: ", err);
+      toast.error("Fail to add rooms");
     } finally {
-      // Reset form after submit
       setForm({
-        title: "",
-        description: "",
-        duration: 0,
-        genre: "",
-        posterUrl: "",
-        standardPricing: 0,
-        vipPricing: 0,
-        classification: "",
-      });
-      setDate(undefined);
+        name: "",
+        type: "",
+      })
     }
-  };
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -236,5 +193,5 @@ export const AddMovieButton = () => {
         </form>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}
