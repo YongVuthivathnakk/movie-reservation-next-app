@@ -43,8 +43,8 @@ const schema = defineSchema({
     row: v.string(),
   }),
 
-  // showTimes
-  showTimes: defineTable({
+  // showtimes
+  showtimes: defineTable({
     movieId: v.id("movies"),
     roomId: v.id("rooms"),
     startTime: v.number(),
@@ -56,7 +56,7 @@ const schema = defineSchema({
   // bookings Table
   bookings: defineTable({
     userId: v.id("users"),
-    showTimeId: v.id("showTimes"),
+    showtimeId: v.id("showtimes"),
     roomId: v.id("rooms"),
     seatId: v.array(v.id("seats")),
     totalPrice: v.number(),
@@ -80,6 +80,7 @@ const schema = defineSchema({
   tickets: defineTable({
     bookingId: v.id("bookings"),
     seatId: v.id("seats"),
+    userId: v.id("users"),
     pricePaid: v.number(),
   })
   .index("by_booking", ["bookingId"])

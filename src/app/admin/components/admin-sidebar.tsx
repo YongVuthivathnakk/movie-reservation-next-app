@@ -4,6 +4,7 @@ import {
   Armchair,
   Calendar,
   CalendarClock,
+  Clock,
   DoorOpen,
   Home,
   Inbox,
@@ -64,13 +65,18 @@ const items = [
   {
     title: "ShowTimes",
     url: "/admin/show-times",
-    icon: CalendarClock,
+    icon: Clock,
   },
   {
     title: "Tickets",
     url: "/admin/tickets",
     icon: Tickets,
   },
+  {
+    title: "Bookings",
+    url: "/admin/bookings",
+    icon: CalendarClock,
+  }
 ];
 
 export function AdminSidebar() {

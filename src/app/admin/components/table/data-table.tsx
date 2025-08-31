@@ -35,7 +35,7 @@ import { Id } from "../../../../../convex/_generated/dataModel";
 import { FunctionReference } from "convex/server";
 import { ReactMutation } from "convex/react";
 
-interface DataTableProps<TData, TValue, TTable extends "movies" | "rooms" | "seats"> {
+interface DataTableProps<TData, TValue, TTable extends "movies" | "rooms" | "seats" | "bookings" | "tickets" | "showtimes"> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   idType: TTable;
@@ -51,7 +51,7 @@ interface DataTableProps<TData, TValue, TTable extends "movies" | "rooms" | "sea
   >;
 }
 
-export function DataTable<TData, TValue, TTable extends "movies" | "rooms" | "seats">({
+export function DataTable<TData, TValue, TTable extends "movies" | "rooms" | "seats" | "bookings" | "tickets" | "showtimes">({
   columns,
   data,
   children,
@@ -105,6 +105,9 @@ DataTableProps<TData, TValue, TTable>) {
     movies: { column: "title", placeholder: "Filter title..." },
     rooms: { column: "name", placeholder: "Filter name..." },
     seats: { column: "roomId", placeholder: "Filter room ID..." },
+    bookings: { column: "userId", placeholder: "Filter user ID..." },
+    tickets: { column: "userId", placeholder: "Filter user ID..." },
+    showtimes: { column: "movieId", placeholder: "Filter movie ID..." },
   };
 
   const config = filterMap[idType];

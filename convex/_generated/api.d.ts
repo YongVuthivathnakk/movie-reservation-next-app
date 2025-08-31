@@ -14,10 +14,13 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as auth from "../auth.js";
+import type * as bookings from "../bookings.js";
 import type * as http from "../http.js";
 import type * as movies from "../movies.js";
 import type * as rooms from "../rooms.js";
 import type * as seats from "../seats.js";
+import type * as showTimes from "../showTimes.js";
+import type * as tickets from "../tickets.js";
 import type * as users from "../users.js";
 
 /**
@@ -30,10 +33,13 @@ import type * as users from "../users.js";
  */
 declare const fullApi: ApiFromModules<{
   auth: typeof auth;
+  bookings: typeof bookings;
   http: typeof http;
   movies: typeof movies;
   rooms: typeof rooms;
   seats: typeof seats;
+  showTimes: typeof showTimes;
+  tickets: typeof tickets;
   users: typeof users;
 }>;
 export declare const api: FilterApi<
