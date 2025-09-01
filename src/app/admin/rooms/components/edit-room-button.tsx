@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,32 +10,35 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useMutation } from "convex/react";
-import { Calendar } from "lucide-react";
+
+import { Id } from "../../../../../convex/_generated/dataModel";
+import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import { useMutation } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import { toast } from "sonner";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export const AddRoomButton = () => {
+interface EditRoomButtonProps {
+  data: {
+    _id: Id<"rooms">;
+    _creationTime: number;
+    name: string;
+    capacity: number;
+    type: string;
+  };
+}
+
+export const EditRoomButton = ({ data }: EditRoomButtonProps) => {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
-    name: "",
-    capacity: 0,
-    type: "",
+    _id: data._id,
+    name: data.name,
+    capacity: data.capacity,
+    type: data.type,
   });
 
-  const handleAddRooms = useMutation(api.rooms.addRooms);
+  const editRoom = useMutation(api.rooms.editRoom);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -50,21 +51,23 @@ export const AddRoomButton = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await handleAddRooms({
+      await editRoom({
+        _id: form._id,
         name: form.name,
         capacity: form.capacity,
-        type: form.type as "standard" | "VIP" | "IMAX"
+        type: form.type as "standard" | "VIP" | "IMAX",
       });
-      toast.success("Room have been added");
+      toast.success("Room have been edited");
       setOpen(false);
     } catch (err) {
-      console.error("Fail to add rooms: ", err);
-      toast.error("Fail to add rooms");
+      console.error("Fail to edit room: ", err);
+      toast.error("Fail to edit rooom");
     } finally {
       setForm({
-        name: "",
-        capacity: 0,
-        type: "",
+        _id: data._id,
+        name: data.name,
+        capacity: data.capacity,
+        type: data.type,
       });
     }
   };
@@ -72,7 +75,10 @@ export const AddRoomButton = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Add Movie</Button>
+        <Button variant={"ghost"}>
+
+        Edit room
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -107,30 +113,30 @@ export const AddRoomButton = () => {
               />
             </div>
 
-              <Select 
-                value={form.type}
-                onValueChange={(value) => setForm((prev) => ({ ...prev, type: value}))}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select room type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Select a room type </SelectLabel>
-                    <SelectItem value="standard">Standard</SelectItem>
-                    <SelectItem value="VIP">VIP</SelectItem>
-                    <SelectItem value="IMAX">IMAX</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-
-
+            <Select
+              value={form.type}
+              onValueChange={(value) =>
+                setForm((prev) => ({ ...prev, type: value }))
+              }
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select room type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Select a room type </SelectLabel>
+                  <SelectItem value="standard">Standard</SelectItem>
+                  <SelectItem value="VIP">VIP</SelectItem>
+                  <SelectItem value="IMAX">IMAX</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
           <DialogFooter className="pt-5">
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button type="submit">Add</Button>
+            <Button type="submit">Edit</Button>
           </DialogFooter>
         </form>
       </DialogContent>

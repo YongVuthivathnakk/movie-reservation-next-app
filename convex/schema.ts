@@ -32,7 +32,12 @@ const schema = defineSchema({
   // rooms Table
   rooms: defineTable({
     name: v.string(),
-    type: v.string(),
+    capacity: v.number(),
+    type: v.union(
+      v.literal("standard"),
+      v.literal("VIP"),
+      v.literal("IMAX")
+    ),
   }),
 
   // seats Table

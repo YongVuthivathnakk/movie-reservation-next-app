@@ -5,11 +5,16 @@ import { toast } from "sonner";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useMutation } from "convex/react";
+import { api } from "../../../../../../convex/_generated/api";
+import { Separator } from "@/components/ui/separator";
+import { EditRoomButton } from "@/app/admin/rooms/components/edit-room-button";
 
 export type Room = {
   _id: Id<"rooms">;
   _creationTime: number;
   name: string;
+  capacity: number;
   type: string;
 };
 
@@ -42,6 +47,10 @@ export const columns: ColumnDef<Room>[] = [
     accessorKey: "name",
     header: "Name",
   },
+    {
+    accessorKey: "capacity",
+    header: "Capacity",
+  },
   {
     accessorKey: "type",
     header: "Type",
@@ -58,6 +67,7 @@ export const columns: ColumnDef<Room>[] = [
     
         id: "actions",
         cell: ({ row }) => {
+          
           const room = row.original;
     
           const handleCopyId = () => {
@@ -84,6 +94,10 @@ export const columns: ColumnDef<Room>[] = [
                   onClick={handleCopyId}
                 >
                   Copy room ID
+                </DropdownMenuItem>
+                <Separator />
+                <DropdownMenuItem>
+                  <EditRoomButton data={room} />
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
