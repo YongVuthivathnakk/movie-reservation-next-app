@@ -72,7 +72,7 @@ export const AddRoomButton = () => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">Add Movie</Button>
+        <Button variant="outline">Add Room</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -107,22 +107,25 @@ export const AddRoomButton = () => {
               />
             </div>
 
-              <Select 
-                value={form.type}
-                onValueChange={(value) => setForm((prev) => ({ ...prev, type: value}))}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select room type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Select a room type </SelectLabel>
-                    <SelectItem value="standard">Standard</SelectItem>
-                    <SelectItem value="VIP">VIP</SelectItem>
-                    <SelectItem value="IMAX">IMAX</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
+
+            <Select
+              value={form.type}
+              onValueChange={(value) => setForm((prev) => ({ ...prev, type: value }))}
+            >
+              <Label >Room Type</Label>
+
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select room type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Select a room type </SelectLabel>
+                  <SelectItem value="standard">Standard</SelectItem>
+                  <SelectItem value="VIP">VIP</SelectItem>
+                  <SelectItem value="IMAX">IMAX</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
 
 
           </div>

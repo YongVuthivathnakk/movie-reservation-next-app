@@ -18,6 +18,7 @@ import { useMutation } from "convex/react";
 import { api } from "../../../../../convex/_generated/api";
 import { toast } from "sonner";
 import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Pen } from "lucide-react";
 
 interface EditRoomButtonProps {
   data: {
@@ -44,6 +45,7 @@ export const EditRoomButton = ({ data }: EditRoomButtonProps) => {
     const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
+      [name]: name === "_id" ?  (value as Id<"rooms">) : value,
       [name]: name === "capacity" ? Number(value) : value,
     }));
   };
@@ -61,6 +63,7 @@ export const EditRoomButton = ({ data }: EditRoomButtonProps) => {
       setOpen(false);
     } catch (err) {
       console.error("Fail to edit room: ", err);
+      console.log(form);
       toast.error("Fail to edit rooom");
     } finally {
       setForm({
@@ -75,8 +78,8 @@ export const EditRoomButton = ({ data }: EditRoomButtonProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant={"ghost"}>
-
+        <Button variant={"ghost"} className="w-full font-normal flex justify-start">
+        <Pen />
         Edit room
         </Button>
       </DialogTrigger>

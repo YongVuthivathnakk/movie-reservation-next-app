@@ -7,6 +7,7 @@ import { useGetAllSeats } from '@/hooks/seats/use-get-all-seats';
 import { columns } from '../components/table/columns/seats';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
+import { AddSeatsButton } from './components/add-seats-button';
 
 function SeatsDashboard() {
 
@@ -18,9 +19,7 @@ function SeatsDashboard() {
     <div className="p-6">
       <h1 className="text-xl font-semibold mb-4">Seats Table</h1>
         <DataTable idType="seats" columns={columns} data={seats || []} handleDelete={deleteData}>
-          <Button>
-            Click Me
-            </ Button>
+          <AddSeatsButton />
         </DataTable>
     </div>
   )

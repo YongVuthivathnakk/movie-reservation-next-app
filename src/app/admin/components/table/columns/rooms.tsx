@@ -2,7 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Id } from "../../../../../../convex/_generated/dataModel";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "convex/react";
@@ -95,8 +95,8 @@ export const columns: ColumnDef<Room>[] = [
                 >
                   Copy room ID
                 </DropdownMenuItem>
-                <Separator />
-                <DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
                   <EditRoomButton data={room} />
                 </DropdownMenuItem>
               </DropdownMenuContent>

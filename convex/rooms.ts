@@ -41,7 +41,7 @@ export const editRoom = mutation({
   },
   handler: async (ctx, args) => {
     const roomId = await ctx.db.get(args._id);
-    if(roomId) {
+    if(!roomId) {
       throw new Error("Room not found");
     }
 
@@ -52,7 +52,6 @@ export const editRoom = mutation({
     })
 
     return await ctx.db.get(args._id);
-
   },
 });
 

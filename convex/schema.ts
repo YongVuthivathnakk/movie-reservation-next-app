@@ -46,6 +46,7 @@ const schema = defineSchema({
     number: v.number(),
     seatType: v.union(v.literal("normal"), v.literal("VIP")),
     row: v.string(),
+    isBooked: v.boolean(),
   }),
 
   // showtimes

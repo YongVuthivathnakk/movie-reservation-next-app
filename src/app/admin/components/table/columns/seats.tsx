@@ -13,6 +13,7 @@ export type Seat = {
     roomId: Id<"rooms">;
     seatType: "normal" | "VIP";
     row: string;
+    isBooked: boolean;
 };
 
 export const columns: ColumnDef<Seat>[] = [
@@ -56,6 +57,10 @@ export const columns: ColumnDef<Seat>[] = [
     {
         accessorKey: "row",
         header: "Row",
+    },
+    {
+        accessorKey: "isBooked",
+        header: "Is_Booked",
     },
     {
         accessorKey: "_creationTime",
